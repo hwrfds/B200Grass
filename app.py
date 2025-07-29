@@ -4,7 +4,7 @@ import numpy as np
 
 # ─── Page Setup ─────────────────────────────────────────────────────────────
 st.set_page_config(page_title="RFDS QLD B200 Landing Distance Calculator", layout="centered")
-st.title("🛬 RFDS QLD B200 King Air Landing Distance Calculator - NOT FOR OPERATIONAL USE")
+st.title("🛬 RFDS QLD B200 King Air Landing Distance Calculator UNPAVED - NOT FOR OPERATIONAL USE")
 
 # ─── Step 1: User Inputs ────────────────────────────────────────────────────
 col1, col2 = st.columns(2)
@@ -121,9 +121,9 @@ st.success(f"{obs50_m:.1f} m")
 # ─── Step 6: Apply a Factor ───────────────────────────────────
 factor_options = {
     "Standard Factor Dry (1.43)": 1.43,
-    "Standard Factor Wet (1.65)": 1.65,
+    "Standard Factor Wet (1.86)": 1.86,
     "Approved Factor Dry (1.20)": 1.20,
-    "Approved Factor Wet (1.38)": 1.38,
+    "Approved Factor Wet (1.56)": 1.56,
 }
 
 # show dropdown and grab the numeric value
