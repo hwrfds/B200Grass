@@ -63,7 +63,7 @@ def lookup_tbl2_interp(df, baseline, w):
                         ref12500,
                         deltas,
                         left=deltas[0],
-                        right=deltas[-1])
+                        right=deltas[0])
     return baseline + float(delta_wt)
 
 weight_adj = lookup_tbl2_interp(df2, baseline, weight)
