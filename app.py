@@ -199,9 +199,9 @@ def lookup_tbl4_interp(df, refd, h=50, ref_col=0, _debug=False, _st=None):
         alpha = (h - h1) / (h2 - h1)
         y = (1 - alpha) * y1 + alpha * y2
 
-    if _debug and (_st is not None):
-        _st.caption(f"[Obs ABS] heights={obs_heights} | h={h} → using {h1} & {h2} | alpha={alpha}")
-        _st.caption(f"[Obs ABS] refd={refd:.2f} | y1={y1:.2f} | y2={y2:.2f} | result={y:.2f}")
+  #  if _debug and (_st is not None):
+   #     _st.caption(f"[Obs ABS] heights={obs_heights} | h={h} → using {h1} & {h2} | alpha={alpha}")
+    #    _st.caption(f"[Obs ABS] refd={refd:.2f} | y1={y1:.2f} | y2={y2:.2f} | result={y:.2f}")
 
     return float(y)
 
