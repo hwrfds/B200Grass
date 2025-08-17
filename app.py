@@ -95,9 +95,9 @@ def lookup_tbl2_interp(df, baseline, w, ref_weight=12500, _debug=False, _st=None
         alpha = (w - w1) / (w2 - w1)
         y = (1 - alpha) * y1 + alpha * y2
 
-    if _debug and (_st is not None):
-        _st.caption(f"[WeightAdj ABS] weights={list(weights)} | w={w} → using {w1} & {w2} | alpha={alpha}")
-        _st.caption(f"[WeightAdj ABS] baseline={baseline:.2f} | y1={y1:.2f} | y2={y2:.2f} | result={y:.2f}")
+   # if _debug and (_st is not None):
+    #    _st.caption(f"[WeightAdj ABS] weights={list(weights)} | w={w} → using {w1} & {w2} | alpha={alpha}")
+     #   _st.caption(f"[WeightAdj ABS] baseline={baseline:.2f} | y1={y1:.2f} | y2={y2:.2f} | result={y:.2f}")
 
     return float(y)
 
