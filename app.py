@@ -7,14 +7,18 @@ st.set_page_config(page_title="RFDS QLD B200 Landing Distance Calculator", layou
 st.title("🛬 RFDS QLD B200 King Air Landing Distance Calculator GRASS SURFACE - NOT FOR OPERATIONAL USE")
 
 # ─── Step 1: User Inputs ────────────────────────────────────────────────────
-col1, col2 = st.columns(2)
-with col1:
-    press_alt = st.slider("Pressure Altitude (ft)",   0, 10000, 0, 250)
-    oat       = st.slider("Outside Air Temperature (°C)", -5, 45, 15, 1)
-with col2:
+with st.sidebar:
+    press_alt = st.slider("Pressure Altitude (ft)", 0, 10000, 0, 250)
+    oat = st.slider("Outside Air Temperature (°C)", -5, 45, 15, 1)
     weight = st.slider("Landing Weight (lb)", 9000, 12500, 11500, 100)
-    wind   = st.slider("Wind Speed (kt)",     -10,    30,    0,   1,
-                       help="Negative = tailwind, Positive = headwind")
+    wind = st.slider(
+        "Wind Speed (kt)",
+        -10,
+        30,
+        0,
+        1,
+        help="Negative = tailwind, Positive = headwind",
+    )
 
 # ─── Step 2: Table 1 – Pressure Altitude × OAT (Bilinear Interpolation) ───
 raw1 = pd.read_csv("pressureheight_oat.csv", skiprows=[0])
