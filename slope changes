@@ -1,0 +1,52 @@
+# ─── Step X: Runway Slope Input & Adjustment (ignore ≤1%, snap to 0) ─────────
+# CASA correction: Apply 10% extra distance per 1% downslope
+# Only applies when downslope magnitude > 1%
+
+# Ensure a default exists
+if "slope_pct" not in st.session_state:
+    st.session_state.slope_pct = 0.0
+
+st.number_input(
+    "Runway Slope (%)",
+    min_value=-5.0,
+    max_value=+5.0,
+    step=0.1,
+    help="Runway slope in percent. Values between –1% and +1% are ignored (snapped to 0). Downslope >1% adds 10% per 1%.",
+    key="slope_pct",
+    format="%.1f",
+)
+
+raw_slope = float(st.session_state.slope_pct)
+
+# Snap any small magnitude to exactly 0.0 (and show a one-line hint)
+if -1.0 <= raw_slope <= 1.0 and raw_slope != 0.0:
+    st.session_state.slope_pct = 0.0
+    raw_slope = 0.0
+    st.caption("Slope ≤1% → snapped to **0.0%** (no adjustment).")
+
+# Compute factor (only downslope >1% adds 10% per 1%)
+if raw_slope < -1.0:
+    slope_factor = 1.0 + 0.10 * abs(raw_slope)
+else:
+    slope_factor = 1.0
+
+# Apply slope factor to the already factored landing distance (ft)
+sloped_ft = factored_ft * slope_factor
+sloped_m  = sloped_ft * 0.3048
+
+st.markdown("### Slope Adjustment")
+c1, c2 = st.columns(2)
+c1.write(f"**Entered Slope:** {raw_slope:+.1f}%")
+c2.write(f"**Slope Factor:** ×{slope_factor:.2f}")
+
+c3, c4 = st.columns(2)
+c3.success(f"Distance w/ Slope: **{sloped_ft:.0f} ft**")
+c4.success(f"Distance w/ Slope: **{sloped_m:.1f} m**")
+
+# (Optional) Show adjustment only if applied
+if slope_factor > 1.0:
+    added_ft = sloped_ft - factored_ft
+    added_m  = added_ft * 0.3048
+    st.caption(f"Added by slope: {added_ft:.0f} ft ({added_m:.1f} m)")
+else:
+    st.caption("No slope adjustment applied (≤1% or upslope).")
