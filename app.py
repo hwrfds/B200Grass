@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # ─── Page Setup ─────────────────────────────────────────────────────────────
-st.set_page_config(page_title="RFDS QLD B200 Landing Distance Calculator", layout="centered")
+st.set_page_config(page_title="RFDS QLD B200 Landing Distance Calculator", layout="wide")
 st.title("🛬 RFDS QLD B200 King Air Landing Distance Calculator GRASS SURFACE - NOT FOR OPERATIONAL USE")
 
 # ─── Step 1: User Inputs ────────────────────────────────────────────────────
