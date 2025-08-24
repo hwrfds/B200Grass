@@ -6,15 +6,47 @@ import numpy as np
 st.set_page_config(page_title="RFDS QLD B200 Landing Distance Calculator", layout="wide")
 st.title("🛬 RFDS QLD B200 King Air Landing Distance Calculator GRASS SURFACE - NOT FOR OPERATIONAL USE")
 
-# ─── Step 1: User Inputs ────────────────────────────────────────────────────
-col1, col2 = st.columns(2)
-with col1:
-    press_alt = st.slider("Pressure Altitude (ft)",   0, 10000, 0, 250)
-    oat       = st.slider("Outside Air Temperature (°C)", -5, 45, 15, 1)
-with col2:
+# ─── Input Widgets ──────────────────────────────────────────────────────────
+factor_options = {
+    "Standard Factor Dry (1.43)": 1.43,
+    "Standard Factor Wet (1.86)": 1.86,
+    "Approved Factor Dry (1.20)": 1.20,
+    "Approved Factor Wet (1.56)": 1.56,
+}
+
+with st.sidebar:
+    press_alt = st.slider("Pressure Altitude (ft)", 0, 10000, 0, 250)
+    oat = st.slider("Outside Air Temperature (°C)", -5, 45, 15, 1)
     weight = st.slider("Landing Weight (lb)", 9000, 12500, 11500, 100)
-    wind   = st.slider("Wind Speed (kt)",     -10,    30,    0,   1,
-                       help="Negative = tailwind, Positive = headwind")
+    wind = st.slider(
+        "Wind Speed (kt)",
+        -10,
+        30,
+        0,
+        1,
+        help="Negative = tailwind, Positive = headwind",
+    )
+    factor_label = st.selectbox(
+        "Select Landing Distance Factor",
+        list(factor_options.keys())
+    )
+    slope_deg = st.number_input(
+        "Runway Slope (%)",
+        min_value=-5.0,
+        max_value=0.0,
+        value=0.0,
+        step=0.1,
+        help="Negative = downslope (increases distance), Positive = upslope (no effect)",
+    )
+    avail_m = st.number_input(
+        "Landing Distance Available (m)",
+        min_value=0.0,
+        value=1150.0,
+        step=5.0,
+        help="Enter the runway length available in metres",
+    )
+
+factor = factor_options[factor_label]
 
 # ─── Step 2: Table 1 – Pressure Altitude × OAT (Bilinear Interpolation) ───
 raw1 = pd.read_csv("pressureheight_oat.csv", skiprows=[0])
@@ -217,19 +249,6 @@ st.markdown("### Final Landing Distance in Meters")
 st.success(f"{obs50_m:.1f} m")
 
 # ─── Step 6: Apply a Factor ───────────────────────────────────
-factor_options = {
-    "Standard Factor Dry (1.43)": 1.43,
-    "Standard Factor Wet (1.86)": 1.86,
-    "Approved Factor Dry (1.20)": 1.20,
-    "Approved Factor Wet (1.56)": 1.56,
-}
-
-# show dropdown and grab the numeric value
-factor_label = st.selectbox(
-    "Select Landing Distance Factor",
-    list(factor_options.keys())
-)
-factor = factor_options[factor_label]
 
 # apply factor to the raw over-50 ft distance
 factored_ft = obs50 * factor
@@ -243,16 +262,8 @@ col2.success(f"{factored_m:.1f} m")
 
 
 
-# ─── Step X: Runway Slope Input & Adjustment (negative = downslope) ─────────
-slope_deg = st.number_input(
-    "Runway Slope (%)",
-    min_value=-5.0,
-    max_value= 0.0,
-    value= 0.0,
-    step= 0.1,
-    help="Negative = downslope (increases distance), Positive = upslope (no effect)"
-)
-
+# ─── Step X: Runway Slope Adjustment (negative = downslope) ────────────────
+# `slope_deg` collected in sidebar
 # For negative slope values, apply 20% extra distance per 1% downslope
 slope_factor = 1.0 + max(-slope_deg, 0.0) * 0.20
 
@@ -270,17 +281,10 @@ col3.success(f"Distance w/ Slope: **{sloped_ft:.0f} ft**")
 col4.success(f"Distance w/ Slope: **{sloped_m:.1f} m**")
 
 # ─── Step Y: Landing Distance Available & Go/No-Go ─────────────────────────
-# Input available runway length in metres
-avail_m = st.number_input(
-    "Landing Distance Available (m)",
-    min_value=0.0,
-    value=1150.0,
-    step=5.0,
-    help="Enter the runway length available in metres"
-)
-
+# `avail_m` collected in sidebar
 # Convert to feet
 avail_ft = avail_m / 0.3048
+
 
 # Display the available distance
 st.markdown("### Available Runway Length")
